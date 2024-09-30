@@ -10,7 +10,8 @@ class rectangle{
         return area;
     }
     paint(){
-        console.log(`painting with color $${this.color}`);
+        console.log("The Color is:")
+        console.log(this.color);
     }
 }
 
