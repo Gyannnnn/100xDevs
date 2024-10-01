@@ -28,12 +28,29 @@
 
 
 
-function setTimefor3s(resolve){
-    setTimeout(resolve,3000)
+// function setTimefor3s(resolve){
+//     setTimeout(resolve,3000)
+// }
+
+// function main(){
+//     console.log("Main Is Called");
+// }
+
+// setTimefor3s(main)
+
+
+
+
+function random(resolve){
+    setTimeout(resolve,3000);
+    
+}
+let p = new Promise(random);
+
+function callBack(){
+    console.log("Promises Completed !");
 }
 
-function main(){
-    console.log("Main Is Called");
-}
 
-setTimefor3s(main)
+
+p.then(callBack)
