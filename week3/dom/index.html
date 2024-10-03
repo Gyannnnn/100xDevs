@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1 id="todo">Todo List</h1>
+    <h4 id="todo1">1. Take Class</h4>
+    <h4 id="todo2">2. Go To Gym</h4>
+    <h4 id="todo3">2. Go Collage</h4>
+    <div>
+      <input type="text" />
+      <button onclick="addTodo()">Add Todo</button>
+    </div>
+    <script>
+      function addTodo() {
+        let input = document.querySelector("input");
+        console.log(input.value);
+      }
+    </script>
+  </body>
+</html>
