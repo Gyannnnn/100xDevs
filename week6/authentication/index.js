@@ -1,21 +1,13 @@
 const express = require("express");
 const app = express();
+const jwt = require('jsonwebtoken');
+const jwt_secret = "pvioudnwdncinewfjkriyalingyana"
 
 app.use(express.json())
 
 const users = [];
 
-function generateRandomString(){
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
-    const charactersLength = characters.length;
-    
-    for (let i = 0;  i < charactersLength; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-  
-    return result;
-}
+
 
 app.get("/",(req,res)=>{
     res.json({
@@ -34,6 +26,8 @@ app.post("/signup",(req,res)=>{
         message:"SignedUp Successfully"
     });
 
+    console.log(users)
+
 
     
 })
@@ -42,22 +36,55 @@ app.post("/signin",(req,res)=>{
   const userName = req.body.userName;
   const userPassword = req.body.userPassword;
 
-  const foundUser = users.find((u) => {
-    return userName == u.userName && userPassword == u.userPassword;
-  });
+  let foundUser = null;
 
-  if (foundUser) {
-    const token = generateRandomString();  // Generate a random token of 16 characters
-    foundUser.token = token;
-    res.json({
-      token: token
-    });
-  } else {
-    return res.json({
-      message: "Invalid User Credential"
-    });
+  for (let i = 0; i<users.length; i++){
+    if(users[i].userName == userName && users[i].userPassword == userPassword){
+        foundUser = users[i];
+    }
   }
+  if(foundUser){
+    const token  = jwt.sign({
+        userName:userName
+    },jwt_secret)
+    // foundUser.token = token;
+    res.json({
+        message:"Signed In Successfull",
+        token:token
+    })
+  }else{
+    res.status(403).send({
+        message:"Invalid Usercredential"
+    })
+  }
+  console.log(users)
 
+})
+
+app.get("/me",(req,res)=>{
+    const token = req.headers.token;
+
+    const decodedUser  = jwt.verify(token,jwt_secret) /// will verify
+
+
+    let foundUser = null;
+
+    for(let i = 0 ; i< users.length ; i++){
+        if(users[i].token == token){
+            foundUser = users[i];
+        }
+    }
+
+    if(foundUser){
+        res.json({
+            userName:foundUser.userName,
+            userPassword:foundUser.userPassword
+        })
+    }else{
+        res.json({
+            message:"Invalid token"
+        })
+    }
 })
 
 app.listen(3000,()=>{
