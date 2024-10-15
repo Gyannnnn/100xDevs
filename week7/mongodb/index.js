@@ -1,1 +1,1 @@
-// nosq
+// nosql databases
