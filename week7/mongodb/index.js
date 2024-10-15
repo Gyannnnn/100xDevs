@@ -1,1 +1,1 @@
-// nosql
+// nosq
