@@ -1,92 +1,79 @@
 const express = require("express");
+const cors = require("cors"); // Ensure CORS is included
+const jwt = require("jsonwebtoken");
+
 const app = express();
-const jwt = require('jsonwebtoken');
-const jwt_secret = "pvioudnwdncinewfjkriyalingyana"
-
-app.use(express.json())
-
+const jwt_secret = "pvioudnwdncinewfjkriyalingyana";
+let homePageReq = 0;
 const users = [];
 
+app.use(express.json());
+app.use(cors()); // Enable CORS for frontend-backend communication
 
+// Middleware to log home page requests
+function logger(req, res, next) {
+    homePageReq++;
+    next();
+}
 
-app.get("/",(req,res)=>{
-    res.json({
-        "Message":"Home Page"
-    })
-})
-app.post("/signup",(req,res)=>{
-    const userName = req.body.userName;
-    const userPassword = req.body.userPassword;
-
-    users.push({
-        userName:userName,
-        userPassword:userPassword
-    });
-    res.json({
-        message:"SignedUp Successfully"
-    });
-
-    console.log(users)
-
-
-    
-})
-
-app.post("/signin",(req,res)=>{
-  const userName = req.body.userName;
-  const userPassword = req.body.userPassword;
-
-  let foundUser = null;
-
-  for (let i = 0; i<users.length; i++){
-    if(users[i].userName == userName && users[i].userPassword == userPassword){
-        foundUser = users[i];
-    }
-  }
-  if(foundUser){
-    const token  = jwt.sign({
-        userName:userName
-    },jwt_secret)
-    // foundUser.token = token;
-    res.json({
-        message:"Signed In Successfull",
-        token:token
-    })
-  }else{
-    res.status(403).send({
-        message:"Invalid Usercredential"
-    })
-  }
-  console.log(users)
-
-})
-
-app.get("/me",(req,res)=>{
+// Authentication middleware
+function auth(req, res, next) {
     const token = req.headers.token;
-
-    const decodedUser  = jwt.verify(token,jwt_secret) /// will verify
-
-
-    let foundUser = null;
-
-    for(let i = 0 ; i< users.length ; i++){
-        if(users[i].token == token){
-            foundUser = users[i];
-        }
+    try {
+        const decodedData = jwt.verify(token, jwt_secret);
+        req.user = decodedData; // Store decoded data in req
+        next();
+    } catch (error) {
+        res.status(401).json({ message: "Invalid or Expired Token" });
     }
+}
 
-    if(foundUser){
-        res.json({
-            userName:foundUser.userName,
-            userPassword:foundUser.userPassword
-        })
-    }else{
-        res.json({
-            message:"Invalid token"
-        })
+// Routes
+app.get("/", logger, (req, res) => {
+    res.json({ message: "Home Page" });
+});
+
+app.post("/signup", (req, res) => {
+    const { username, password } = req.body;
+
+    users.push({ username, password });
+    res.json({ message: "Signed Up Successfully" });
+});
+
+app.post("/signin", (req, res) => {
+    const { username, password } = req.body;
+
+    const user = users.find(
+        (user) => user.username === username && user.password === password
+    );
+
+    if (user) {
+        const token = jwt.sign({ username }, jwt_secret);
+        res.json({ message: "Signed In Successfully", token });
+    } else {
+        res.status(403).json({ message: "Invalid Credentials" });
     }
-})
+});
 
-app.listen(3000,()=>{
-    console.log("Server Is Running At 3000");
-})
+app.get("/me", auth, (req, res) => {
+    const { username } = req.user;
+
+    const user = users.find((user) => user.username === username);
+
+    if (user) {
+        res.json({ userName: user.username });
+    } else {
+        res.status(404).json({ message: "User Not Found" });
+    }
+});
+
+app.get("/logger", (req, res) => {
+    res.json({
+        message: `Total Number Of Requests to the Home Page: ${homePageReq}`
+    });
+});
+
+// Start the server
+app.listen(3000, () => {
+    console.log("Server is running at http://localhost:3000");
+});
