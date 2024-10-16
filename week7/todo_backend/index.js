@@ -1,8 +1,12 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
+const JWT_SECRET = "OCIUIQERBDCOBOBDEIB"
 
 const {UserModel , TodoModel} = require("./db")
+
+mongoose.connect("mongodb+srv://higyanaranjanpatra:aQeQsg44Yq5EKgjs@cluster0.vjgqs.mongodb.net/todo-gyana")
 
 
 app.use(express.json());
@@ -24,17 +28,19 @@ app.post("/signup",async(req,res)=>{
 
 });
 
-app.post("/signin",(req,res)=>{
+app.post("/signin",async(req,res)=>{
     const {email , password } = req.body;
-    const user = UserModel.findOne({
+    const user = await UserModel.findOne({
         email,
         password
     })
     console.log(user);
     if(user){
-        const token = 
+        const token = jwt.sign({
+            id:user._id
+        },JWT_SECRET)
         res.json({
-
+            token:token
 
         })
     }else{
