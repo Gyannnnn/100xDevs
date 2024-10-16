@@ -10,7 +10,7 @@ mongoose.connect("mongodb+srv://higyanaranjanpatra:aQeQsg44Yq5EKgjs@cluster0.vjg
 
 
 
-app.use(express.json());
+app.use(express.json()); 
 
 
 
