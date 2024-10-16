@@ -4,9 +4,10 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = "OCIUIQERBDCOBOBDEIB"
 
-const {UserModel , TodoModel} = require("./db")
+const { UserModel, TodoModel } = require("./db")
 
 mongoose.connect("mongodb+srv://higyanaranjanpatra:aQeQsg44Yq5EKgjs@cluster0.vjgqs.mongodb.net/todo-gyana")
+
 
 
 app.use(express.json());
@@ -14,56 +15,90 @@ app.use(express.json());
 
 
 
-app.post("/signup",async(req,res)=>{
+app.post("/signup", async (req, res) => {
 
-    const {email, password, name} = req.body
+    const { email, password, name } = req.body
     await UserModel.create({
         email,
         password,
         name
     })
     res.json({
-        message:"Successfully signedUp"
+        message: "Successfully signedUp"
     })
 
 });
 
-app.post("/signin",async(req,res)=>{
-    const {email , password } = req.body;
+app.post("/signin", async (req, res) => {
+    const { email, password } = req.body;
     const user = await UserModel.findOne({
         email,
         password
     })
     console.log(user);
-    if(user){
+    if (user) {
         const token = jwt.sign({
-            id:user._id
-        },JWT_SECRET)
+            id: user._id.toString()
+        }, JWT_SECRET)
         res.json({
-            token:token
+            token: token
 
         })
-    }else{
+    } else {
         res.status(403).json({
-            message:"Incorrect Credential"
+            message: "Incorrect Credential"
         })
     }
 
 
 });
-app.get("/todo",(req,res)=>{
+app.post("/todo", auth, async(req, res) => {
+    const userId = req.userId;
+    const title = req.body.title
+    const done = req.body.done
 
-
-});
-
-app.get("/todos",(req,res)=>{
-
+    await TodoModel.create({
+        title,
+        done,
+        userId
+    })
     res.json({
-        message:"Your Todos Will Appear here"
+        message:"Successfully Created",
+        userId:userId
     })
 
 });
 
-app.listen(3000,function(){
+app.get("/todos", auth, async(req, res) => {
+    const userId = req.userId;
+    const todos = await TodoModel.find({
+        userId
+    })
+     res.json({
+        todos
+    })
+
+});
+
+
+
+function auth(req, res, next) {
+    const token = req.headers.token;
+    const decodedData = jwt.verify(token, JWT_SECRET);
+
+    if (decodedData) {
+        req.userId = decodedData.id;
+        next()
+    } else {
+        res.json({
+            message: "Incorrect Credential"
+        })
+    }
+
+}
+
+
+
+app.listen(3000, function () {
     console.log("Server Is Running At http://localhost:3000");
 })
