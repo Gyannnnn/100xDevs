@@ -38,10 +38,17 @@ app.post("/signin", async (req, res) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({
         email,
-        password
+        
     })
+
+    if(!user){
+        res.json({
+            message:"No user Found !"
+        })
+    }
+    const passwordMatch = await bcrypt.compare(password, user.password)
     console.log(user);
-    if (user) {
+    if (passwordMatch) {
         const token = jwt.sign({
             id: user._id.toString()
         }, JWT_SECRET)
