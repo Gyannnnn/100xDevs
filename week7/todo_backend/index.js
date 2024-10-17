@@ -6,31 +6,53 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = "OCIUIQERBDCOBOBDEIB"
 const bcrypt = require('bcrypt')
 const { UserModel, TodoModel } = require("./db")
+const {z} = require('zod');
 
-mongoose.connect("mongodb+srv://higyanaranjanpatra:aQeQsg44Yq5EKgjs@cluster0.vjgqs.mongodb.net/todo-gyana")
+mongoose.connect("mongodb+srv://higyanaranjanpatra:NmgUrXyliNnZAEI4@cluster0.vjgqs.mongodb.net/todo-gyana")
 
 
 
-app.use(express.json()); 
+app.use(express.json());
 
 
 
 
 app.post("/signup", async (req, res) => {
 
+    const requiredBody = z.object({
+        email:z.string().min(3).max(100).email(),
+        name:z.string().min(3).max(100),
+        password:z.string().min(8)
+    })
+
+    const parsedDateWithSuccess = requiredBody.safeParse(req.body);
+
+    if(!parsedDateWithSuccess.success){
+        return res.json({
+            message:"Incorrect Input format",
+            error:parsedDateWithSuccess.error
+        })
+    }
+
     const { email, password, name } = req.body
 
-    const hashedPassword = await bcrypt.hash(password , 10);
-    console.log(hashedPassword)
+    try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        console.log(hashedPassword)
 
-    await UserModel.create({
-        email,
-        hashedPassword,
-        name
-    })
-    res.json({
-        message: "Successfully signedUp"
-    })
+        await UserModel.create({
+            email,
+            password: hashedPassword,
+            name
+        })
+        res.json({
+            message: "Successfully signedUp"
+        })
+    } catch (error) {
+        res.status(400).json({
+            message:"User already exist !"
+        })
+    }
 
 });
 
@@ -38,12 +60,12 @@ app.post("/signin", async (req, res) => {
     const { email, password } = req.body;
     const user = await UserModel.findOne({
         email,
-        
+
     })
 
-    if(!user){
-        res.json({
-            message:"No user Found !"
+    if (!user) {
+        return res.json({
+            message: "No user Found !"
         })
     }
     const passwordMatch = await bcrypt.compare(password, user.password)
@@ -64,7 +86,7 @@ app.post("/signin", async (req, res) => {
 
 
 });
-app.post("/todo", auth, async(req, res) => {
+app.post("/todo", auth, async (req, res) => {
     const userId = req.userId;
     const title = req.body.title
     const done = req.body.done
@@ -75,20 +97,21 @@ app.post("/todo", auth, async(req, res) => {
         userId
     })
     res.json({
-        message:"Successfully Created",
-        userId:userId
+        message: "Successfully Created",
+        userId: userId
     })
 
 });
 
-app.get("/todos", auth, async(req, res) => {
+app.get("/todos", auth, async (req, res) => {
     const userId = req.userId;
     const todos = await TodoModel.find({
         userId
     })
-     res.json({
+    res.json({
         todos
     })
+    console.log("Successfuly fetched todos")
 
 });
 
@@ -102,7 +125,7 @@ function auth(req, res, next) {
         req.userId = decodedData.id;
         next()
     } else {
-        res.json({
+        return res.json({
             message: "Incorrect Credential"
         })
     }
