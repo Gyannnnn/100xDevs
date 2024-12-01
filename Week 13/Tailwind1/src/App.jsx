@@ -13,9 +13,9 @@ export default function App() {
         <div className="flex items-center justify-center flex-col gap-10">
         <div className="flex flex-col gap-2 items-center ">
         <h1 className="text-slate-100 font-extralight ">Please confirm birth year. This data will not be shared</h1>
-        <input type="text" className="bg-slate-500 px-10 py-2 rounded-lg text-white outline-none w-[80%]" placeholder="Your Birth Year"/>
+        <input type="text " className="bg-slate-500 px-10 py-2 rounded-lg text-white outline-none w-[80%]" placeholder="Your Birth Year"/>
         </div>
-        <button className="bg-slate-400 text-white px-28 py-2 rounded">Contiue</button>
+        <button className="bg-slate-400 text-white px-28 py-2 rounded-md">Contiue</button>
         </div>
       </div>
     </div>
