@@ -1,10 +1,25 @@
-function greet2(user: { name: string; age: number }) {
-  console.log("Hi " + user.name);
-  console.log("Your Age Is " + user.age);
+interface user{
+  firstName:string,
+  lastname:string,
+  age:number
+}
+
+const greet21 =(student:user):void=>{
+  console.log("Hi "+student.firstName);
+
 }
 
 
-greet2({
-    name: "GYanranjan",
-    age: 90
-})
+let student:user = {
+  firstName:"Gyanranjan",
+  lastname:"patra",
+  age:21
+
+}
+let teacher:user = {
+  firstName:"Atul Vikash",
+  lastname:"Lakra",
+  age:31
+}
+greet21(student);
+greet21(teacher);
