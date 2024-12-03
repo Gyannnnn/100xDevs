@@ -1,8 +1,16 @@
 "use strict";
-function greet12(user) {
-    console.log("Hi " + user.name + " Your Age Is" + user.Age);
-}
-let user = {
-    name: "Gyanranjan Patra",
-    Age: 19
+const greet21 = (student) => {
+    console.log("Hi " + student.firstName);
 };
+let student = {
+    firstName: "Gyanranjan",
+    lastname: "patra",
+    age: 21
+};
+let teacher = {
+    firstName: "Atul Vikash",
+    lastname: "Lakra",
+    age: 31
+};
+greet21(student);
+greet21(teacher);
