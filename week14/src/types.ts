@@ -1,22 +1,13 @@
-interface human{
-    name:string,
-    age:number
+// types let us to aggregate the data together
+
+
+interface User{
+    name: string;
+    age: number;
 }
 
-interface student{
-    regdNo:number,
-    Branch:string
+
+type User1 = {
+    name: string;
+    age: number 
 }
-
-type employee = human & student;
-
-
-let teacher1:employee = {
-    name:"Atual",
-    age:29,
-    regdNo:2302080019,
-    Branch:"Information Technology"
-
-}
-
-console.log(teacher1.name);
