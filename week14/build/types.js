@@ -1,8 +1,15 @@
 "use strict";
-let teacher1 = {
-    name: "Atual",
-    age: 29,
-    regdNo: 2302080019,
-    Branch: "Information Technology"
+// types let us to aggregate the data together
+let e = {
+    name: "Harkrat",
+    startDate: "12-23-12222"
 };
-console.log(teacher1.name);
+let ma = {
+    name: "harkirat",
+    department: "Electricity",
+};
+let tld = {
+    name: "Gyanaranjan Patra",
+    startDate: "90-12-22222",
+    department: "Chor",
+};
