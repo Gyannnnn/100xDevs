@@ -10,9 +10,11 @@ const userProfileSchema = z.object({
   age: z.number().min(18, { message: "You must be at least 18 years old" }).optional(),
 });
 
+type finalUserSchema = z.infer<typeof userProfileSchema>
+
 app.put("/user", (req, res) => {
   const { success } = userProfileSchema.safeParse(req.body);
-  const updateBody = req.body; // how to assign a type to updateBody?
+  const updateBody:finalUserSchema = req.body; // how to assign a type to updateBody?
 
   if (!success) {
     res.status(411).json({});
