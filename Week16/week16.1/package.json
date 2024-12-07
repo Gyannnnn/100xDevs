@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc -b && node ./dist/index.js"
+    "dev": "tsc -b && node ./dist/pingPong.js"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +11,7 @@
   "description": "",
   "dependencies": {
     "@types/ws": "^8.5.13",
-    "wd": "^1.14.0"
+    "wd": "^1.14.0",
+    "ws": "^8.18.0"
   }
 }
