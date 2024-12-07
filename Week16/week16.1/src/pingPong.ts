@@ -7,6 +7,9 @@ wss.on('connection',(socket)=>{
     socket.on('message',(e)=>{
         if(e.toString() === "ping"){
             socket.send("pong");
+        }else{
+            //@ts-ignore
+            socket.send(e.data)
         }
     })
 })
