@@ -3,18 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc -b && node ./dist/index.js"
+    "gyan": "tsc -b && node ./dist/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@types/bcrypt": "^5.0.2",
-    "@types/express": "^5.0.0",
-    "@types/pg": "^8.11.10",
-    "bcrypt": "^5.1.1",
-    "express": "^4.21.2",
-    "pg": "^8.13.1"
-  }
+  "description": ""
 }
