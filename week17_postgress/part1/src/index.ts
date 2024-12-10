@@ -10,7 +10,7 @@ const pgClient = new Client({
   port: 5432,
   host: "ep-ancient-butterfly-a518kar0.us-east-2.aws.neon.tech",
   database: "neondb",
-  ssl: true
+  ssl: true     
 });
 
 pgClient.connect();
