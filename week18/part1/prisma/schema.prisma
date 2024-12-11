@@ -13,4 +13,13 @@ model User{
   username   String  @unique
   password   String  
   age        Int 
+  city       String  
 }
+
+model Todo{
+  id           Int        @id     @default(autoincrement())
+  userId       Int       
+  task         String
+  description  String
+  done         Boolean
+}  
