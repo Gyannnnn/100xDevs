@@ -2,19 +2,18 @@ import axios from "axios";
 
 export default async function User() {
   const response = await axios.get(
-    "https://jsonplaceholder.typicode.com/users"
+    "http://localhost:3000/api/v1/user/details"
   );
+  
+ 
   const data = response.data;
   console.log(data);
   console.log("hi")
-
   return (
     <div className="">
-      <div className="flex flex-col">
-        <h1>{data[0].name}</h1>
-        <h1> {data[0].email}</h1>
-        <h1> {data[0].address.street}</h1>
-      </div>
+      {
+        <h1>{data.name}</h1>
+      }
     </div>
   );
 }
