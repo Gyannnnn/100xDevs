@@ -1,6 +1,7 @@
 import Image, { type ImageProps } from "next/image";
 import { Button } from "@repo/ui/button";
 import styles from "./page.module.css";
+ 
 
 type Props = Omit<ImageProps, "src"> & {
   srcLight: string;
@@ -60,7 +61,7 @@ export default function Home() {
             rel="noopener noreferrer"
             className={styles.secondary}
           >
-            Read our docs
+            Read my docs
           </a>
         </div>
         <Button appName="web" className={styles.secondary}>
